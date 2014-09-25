@@ -52,7 +52,10 @@ var Typeahead = React.createClass({
   },
 
   getOptionsForValue: function(value, options) {
-    var result = fuzzy.filter(value, options).map(function(res) {
+		var filterCB = function(element) {
+			return (element.indexOf(value) == 0);
+		}
+    var result = options.filter(filterCB).map(function(res) {
       return res.string;
     });
 
