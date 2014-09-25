@@ -55,9 +55,7 @@ var Typeahead = React.createClass({
 		var filterCB = function(element) {
 			return (element.indexOf(value) == 0);
 		}
-    var result = options.filter(filterCB).map(function(res) {
-      return res.string;
-    });
+    var result = options.filter(filterCB);
 
     if (this.props.maxVisible) {
       result = result.slice(0, this.props.maxVisible);
