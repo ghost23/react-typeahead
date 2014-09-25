@@ -102,7 +102,11 @@ var Typeahead = React.createClass({
   },
 
   _onTextEntryUpdated: function() {
-    var value = this.refs.entry.getDOMNode().value;
+		var inputelement = this.refs.entry.getDOMNode();
+    var value = inputelement.value;
+	  
+		// this.refs.entry.getDOMNode().setSelectionRange(selectionStart, selectionEnd, [optional] selectionDirection);
+	  
     this.setState({visible: this.getOptionsForValue(value, this.state.options),
                    selection: null,
                    entryValue: value});
@@ -111,6 +115,7 @@ var Typeahead = React.createClass({
 
   _onEnter: function(event) {
     if (!this.refs.sel.state.selection) {
+			this._onOptionSelected(this.state.visible[0]);
       return this.props.onKeyDown(event);
     }
     this._onOptionSelected(this.refs.sel.state.selection);
