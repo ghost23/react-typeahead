@@ -114,7 +114,7 @@ var Typeahead = React.createClass({
 		var inputelement = this.refs.entry.getDOMNode();
     var value = inputelement.value;
 		
-		if(value == this.state.entryValue) return false;
+		if(value == this.state.selection) return false;
 	  
 		// this.refs.entry.getDOMNode().setSelectionRange(selectionStart, selectionEnd, [optional] selectionDirection);
 	  
