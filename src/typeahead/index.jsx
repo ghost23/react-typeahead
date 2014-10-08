@@ -61,8 +61,8 @@ var Typeahead = React.createClass({
 
   getOptionsForValue: function(value, options) {
 		var filterCB = function(element) {
-			return (element.indexOf(value) == 0);
-		}
+			return (element.toLowerCase().indexOf(value.toLowerCase()) == 0);
+		};
     var result = options.filter(filterCB);
 
     if (this.props.maxVisible) {
