@@ -124,6 +124,11 @@ var Typeahead = React.createClass({
     return false;
   },
 
+  _onBlur: function(event) {
+
+      if(this.state.visible.length) this._onEnter(event);
+  },
+
   _onEnter: function(event) {
     if (!this.refs.sel.state.selection) {
 			this._onOptionSelected(this.state.visible[0]);
@@ -173,13 +178,13 @@ var Typeahead = React.createClass({
   },
 
   render: function() {
-    var inputClasses = {}
+    var inputClasses = {};
     inputClasses[this.props.customClasses.input] = !!this.props.customClasses.input;
-    var inputClassList = React.addons.classSet(inputClasses)
+    var inputClassList = React.addons.classSet(inputClasses);
 
     var classes = {
       typeahead: true
-    }
+    };
     classes[this.props.className] = !!this.props.className;
     var classList = React.addons.classSet(classes);
 
@@ -189,7 +194,7 @@ var Typeahead = React.createClass({
           placeholder={this.props.placeholder}
           className={inputClassList} defaultValue={this.state.entryValue}
           onChange={this._onTextEntryUpdated} onKeyDown={this._onKeyDown}
-          onBlur={this._onEnter} />
+          onBlur={this._onBlur} />
         { this._renderIncrementalSearchResults() }
       </div>
     );
