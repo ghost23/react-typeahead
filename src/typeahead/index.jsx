@@ -126,7 +126,7 @@ var Typeahead = React.createClass({
 
   _onBlur: function(event) {
 
-      if(this.state.visible.length) this._onEnter(event);
+      if(this.refs.sel) this._onEnter(event);
   },
 
   _onEnter: function(event) {
