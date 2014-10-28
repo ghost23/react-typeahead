@@ -138,6 +138,7 @@ var Typeahead = React.createClass({
     this.setState({visible: this.getOptionsForValue(value, this.state.options),
                    selection: null,
                    entryValue: value});
+	  if(value == "" || !(/\S/g.test(value))) this.props.onOptionSelected("");
     return false;
   },
 
