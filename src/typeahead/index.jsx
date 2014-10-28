@@ -79,18 +79,23 @@ var Typeahead = React.createClass({
   _renderIncrementalSearchResults: function() {
     // Nothing has been entered into the textbox
     if (!this.state.entryValue) {
+		$("html, body").off("click");
       return "";
     }
 
     // Something was just selected
     if (this.state.selection) {
+		$("html, body").off("click");
       return "";
     }
 
     // There are no typeahead / autocomplete suggestions
     if (!this.state.visible.length) {
+		$("html, body").off("click");
       return "";
     }
+	  
+	  $("html, body").click(this.onOpenClose);
 
     return (
       <TypeaheadSelector
@@ -99,6 +104,17 @@ var Typeahead = React.createClass({
         customClasses={this.props.customClasses} />
    );
   },
+	
+	onOpenClose: function(event) {
+
+        var parents = $(event.target).parents(".typeahead-selector");
+
+        if(parents.length <= 0) {
+
+            event.stopPropagation();
+            if(this.refs.sel) this._onEnter(event);
+        }
+    },
 
   _onOptionSelected: function(option) {
     var nEntry = this.refs.entry.getDOMNode();
@@ -122,11 +138,6 @@ var Typeahead = React.createClass({
                    selection: null,
                    entryValue: value});
     return false;
-  },
-
-  _onBlur: function(event) {
-
-      if(this.refs.sel) this._onEnter(event);
   },
 
   _onEnter: function(event) {
@@ -193,8 +204,7 @@ var Typeahead = React.createClass({
         <input ref="entry" type="text"
           placeholder={this.props.placeholder}
           className={inputClassList} defaultValue={this.state.entryValue}
-          onChange={this._onTextEntryUpdated} onKeyDown={this._onKeyDown}
-          onBlur={this._onBlur} />
+          onChange={this._onTextEntryUpdated} onKeyDown={this._onKeyDown} />
         { this._renderIncrementalSearchResults() }
       </div>
     );
