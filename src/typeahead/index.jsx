@@ -6,6 +6,7 @@ var React = window.React || require('react/addons');
 var TypeaheadSelector = require('./selector');
 var KeyEvent = require('../keyevent');
 var fuzzy = require('fuzzy');
+var $ = require('jquery');
 
 /**
  * A "typeahead", an auto-completing text input
