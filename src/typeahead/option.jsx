@@ -2,7 +2,7 @@
  * @jsx React.DOM
  */
 
-var React = window.React || require('react/addons');
+var React = require('react/addons');
 
 /**
  * A single option within the TypeaheadSelector
