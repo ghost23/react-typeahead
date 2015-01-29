@@ -149,6 +149,7 @@ var Typeahead = React.createClass({
 		
 		if(foundItems.length === 1) {
 			this._onOptionSelected(value);
+			inputelement.value = foundItems[0];
 			return true;
 		}else {
 			this.setState({
