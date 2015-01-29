@@ -15,44 +15,46 @@ var $ = require('jquery');
  * keyboard or mouse to select.  Requires CSS for MASSIVE DAMAGE.
  */
 var Typeahead = React.createClass({
-  propTypes: {
-    customClasses: React.PropTypes.object,
-    maxVisible: React.PropTypes.number,
-    options: React.PropTypes.array,
-    defaultValue: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    onOptionSelected: React.PropTypes.func,
-    onKeyDown: React.PropTypes.func
-  },
+	propTypes: {
+		customClasses: React.PropTypes.object,
+		maxVisible: React.PropTypes.number,
+		options: React.PropTypes.array,
+		defaultValue: React.PropTypes.string,
+		placeholder: React.PropTypes.string,
+		onOptionSelected: React.PropTypes.func,
+		onKeyDown: React.PropTypes.func
+	},
 
-  getDefaultProps: function() {
-    return {
-      options: [],
-      customClasses: {},
-      defaultValue: "",
-      placeholder: "",
-      onKeyDown: function(event) { return true; },
-      onOptionSelected: function(option) { }
-    };
-  },
+	getDefaultProps: function () {
+		return {
+			options: [],
+			customClasses: {},
+			defaultValue: "",
+			placeholder: "",
+			onKeyDown: function (event) {
+				return true;
+			},
+			onOptionSelected: function (option) {}
+		};
+	},
 
-  getInitialState: function() {
-    return {
-      // The set of all options... Does this need to be state?  I guess for lazy load...
-      options: this.props.options,
+	getInitialState: function () {
+		return {
+			// The set of all options... Does this need to be state?  I guess for lazy load...
+			options: this.props.options,
 
-      // The currently visible set of options
-      visible: this.getOptionsForValue(this.props.defaultValue, this.props.options),
+			// The currently visible set of options
+			visible: this.getOptionsForValue(this.props.defaultValue, this.props.options),
 
-      // This should be called something else, "entryValue"
-      entryValue: this.props.defaultValue,
+			// This should be called something else, "entryValue"
+			entryValue: this.props.defaultValue,
 
-      // A valid typeahead value
-      selection: null
-    };
-  },
-	
-	componentWillReceiveProps: function(nextProps) {
+			// A valid typeahead value
+			selection: null
+		};
+	},
+
+	componentWillReceiveProps: function (nextProps) {
 		this.setState({
 			options: nextProps.options,
 			entryValue: nextProps.defaultValue,
@@ -60,157 +62,189 @@ var Typeahead = React.createClass({
 		});
 	},
 
-  getOptionsForValue: function(value, options) {
-		var filterCB = function(element) {
+	getOptionsForValue: function (value, options) {
+		var filterCB = function (element) {
 			return (element.toLowerCase().indexOf(value.toLowerCase()) == 0);
 		};
-    var result = options.filter(filterCB);
+		var result = options.filter(filterCB);
 
-    if (this.props.maxVisible) {
-      result = result.slice(0, this.props.maxVisible);
-    }
-    return result;
-  },
+		if (this.props.maxVisible) {
+			result = result.slice(0, this.props.maxVisible);
+		}
+		return result;
+	},
 
-  setEntryText: function(value) {
-    this.refs.entry.getDOMNode().value = value;
-    this._onTextEntryUpdated();
-  },
+	setEntryText: function (value) {
+		this.refs.entry.getDOMNode().value = value;
+		this._onTextEntryUpdated();
+	},
 
-  _renderIncrementalSearchResults: function() {
-    // Nothing has been entered into the textbox
-    if (!this.state.entryValue) {
-		$("html, body").off("click");
-      return "";
-    }
+	_renderIncrementalSearchResults: function () {
+		// Nothing has been entered into the textbox
+		if (!this.state.entryValue) {
+			$("html, body").off("click");
+			return "";
+		}
 
-    // Something was just selected
-    if (this.state.selection) {
-		$("html, body").off("click");
-      return "";
-    }
+		// Something was just selected
+		if (this.state.selection) {
+			$("html, body").off("click");
+			return "";
+		}
 
-    // There are no typeahead / autocomplete suggestions
-    if (!this.state.visible.length) {
-		$("html, body").off("click");
-      return "";
-    }
-	  
-	  $("html, body").click(this.onOpenClose);
+		// There are no typeahead / autocomplete suggestions
+		if (!this.state.visible.length) {
+			$("html, body").off("click");
+			return "";
+		}
 
-    return (
-      <TypeaheadSelector
-        ref="sel" options={ this.state.visible }
-        onOptionSelected={ this._onOptionSelected }
-        customClasses={this.props.customClasses} />
-   );
-  },
-	
-	onOpenClose: function(event) {
+		$("html, body").click(this.onOpenClose);
 
-        var parents = $(event.target).parents(".typeahead-selector");
+		return ( < TypeaheadSelector ref = "sel"
+			options = {
+				this.state.visible
+			}
+			onOptionSelected = {
+				this._onOptionSelected
+			}
+			customClasses = {
+				this.props.customClasses
+			}
+			/>
+		);
+	},
 
-        if(parents.length <= 0) {
+	onOpenClose: function (event) {
 
-            event.stopPropagation();
-            if(this.refs.sel) this._onEnter(event);
-        }
-    },
+		var parents = $(event.target).parents(".typeahead-selector");
 
-  _onOptionSelected: function(option) {
-    var nEntry = this.refs.entry.getDOMNode();
-    nEntry.focus();
-    nEntry.value = option;
-    this.setState({visible: this.getOptionsForValue(option, this.state.options),
-                   selection: option,
-                   entryValue: option});
-    this.props.onOptionSelected(option);
-  },
+		if (parents.length <= 0) {
 
-  _onTextEntryUpdated: function() {
+			event.stopPropagation();
+			if (this.refs.sel) this._onEnter(event);
+		}
+	},
+
+	_onOptionSelected: function (option) {
+		var nEntry = this.refs.entry.getDOMNode();
+		nEntry.focus();
+		nEntry.value = option;
+		this.setState({
+			visible: this.getOptionsForValue(option, this.state.options),
+			selection: option,
+			entryValue: option
+		});
+		this.props.onOptionSelected(option);
+	},
+
+	_onTextEntryUpdated: function () {
 		var inputelement = this.refs.entry.getDOMNode();
-    var value = inputelement.value;
-		
-		if(value == this.state.selection) return false;
-	  
+		var value = inputelement.value;
+
+		if (value == this.state.selection) return false;
+
 		// this.refs.entry.getDOMNode().setSelectionRange(selectionStart, selectionEnd, [optional] selectionDirection);
-	  
-    this.setState({visible: this.getOptionsForValue(value, this.state.options),
-                   selection: null,
-                   entryValue: value});
-	  if(value == "" || !(/\S/g.test(value))) this.props.onOptionSelected("");
-    return false;
-  },
+		
+		var foundItems = this.getOptionsForValue(value, this.state.options);
+		
+		if(foundItems.length === 1) {
+			this._onOptionSelected(value);
+			return true;
+		}else {
+			this.setState({
+				visible: foundItems,
+				selection: null,
+				entryValue: value
+			});
+			if (value == "" || !(/\S/g.test(value))) this.props.onOptionSelected("");
+			return false;
+		}
+	},
 
-  _onEnter: function(event) {
-    if (!this.refs.sel.state.selection) {
+	_onEnter: function (event) {
+		if (!this.refs.sel.state.selection) {
 			this._onOptionSelected(this.state.visible[0]);
-      return this.props.onKeyDown(event);
-    }
-    this._onOptionSelected(this.refs.sel.state.selection);
-  },
+			return this.props.onKeyDown(event);
+		}
+		this._onOptionSelected(this.refs.sel.state.selection);
+	},
 
-  _onEscape: function() {
-    this.refs.sel.setSelectionIndex(null)
-  },
+	_onEscape: function () {
+		this.refs.sel.setSelectionIndex(null)
+	},
 
-  _onTab: function(event) {
-    var option = this.refs.sel.state.selection ?
-      this.refs.sel.state.selection : this.state.visible[0];
-    this._onOptionSelected(option)
-  },
+	_onTab: function (event) {
+		var option = this.refs.sel.state.selection ?
+			this.refs.sel.state.selection : this.state.visible[0];
+		this._onOptionSelected(option)
+	},
 
-  eventMap: function(e) {
-    var events = {};
+	eventMap: function (e) {
+		var events = {};
 
-    events[KeyEvent.DOM_VK_UP] = this.refs.sel.navUp;
-    events[KeyEvent.DOM_VK_DOWN] = this.refs.sel.navDown;
-    events[KeyEvent.DOM_VK_RETURN] = events[KeyEvent.DOM_VK_ENTER] = this._onEnter;
-    events[KeyEvent.DOM_VK_ESCAPE] = this._onEscape;
-    events[KeyEvent.DOM_VK_TAB] = this._onTab;
+		events[KeyEvent.DOM_VK_UP] = this.refs.sel.navUp;
+		events[KeyEvent.DOM_VK_DOWN] = this.refs.sel.navDown;
+		events[KeyEvent.DOM_VK_RETURN] = events[KeyEvent.DOM_VK_ENTER] = this._onEnter;
+		events[KeyEvent.DOM_VK_ESCAPE] = this._onEscape;
+		events[KeyEvent.DOM_VK_TAB] = this._onTab;
 
-    return events;
-  },
+		return events;
+	},
 
-  _onKeyDown: function(event) {
-    // If there are no visible elements, don't perform selector navigation.
-    // Just pass this up to the upstream onKeydown handler
-    if (!this.refs.sel) {
-      return this.props.onKeyDown(event);
-    }
+	_onKeyDown: function (event) {
+		// If there are no visible elements, don't perform selector navigation.
+		// Just pass this up to the upstream onKeydown handler
+		if (!this.refs.sel) {
+			return this.props.onKeyDown(event);
+		}
 
-    var handler = this.eventMap()[event.keyCode];
+		var handler = this.eventMap()[event.keyCode];
 
-    if (handler) {
-      handler(event);
-    } else {
-      return this.props.onKeyDown(event);
-    }
-    // Don't propagate the keystroke back to the DOM/browser
-    return false;
-  },
+		if (handler) {
+			handler(event);
+		} else {
+			return this.props.onKeyDown(event);
+		}
+		// Don't propagate the keystroke back to the DOM/browser
+		return false;
+	},
 
-  render: function() {
-    var inputClasses = {};
-    inputClasses[this.props.customClasses.input] = !!this.props.customClasses.input;
-    var inputClassList = React.addons.classSet(inputClasses);
+	render: function () {
+		var inputClasses = {};
+		inputClasses[this.props.customClasses.input] = !!this.props.customClasses.input;
+		var inputClassList = React.addons.classSet(inputClasses);
 
-    var classes = {
-      typeahead: true
-    };
-    classes[this.props.className] = !!this.props.className;
-    var classList = React.addons.classSet(classes);
+		var classes = {
+			typeahead: true
+		};
+		classes[this.props.className] = !!this.props.className;
+		var classList = React.addons.classSet(classes);
 
-    return (
-      <div className={classList}>
-        <input ref="entry" type="text"
-          placeholder={this.props.placeholder}
-          className={inputClassList} defaultValue={this.state.entryValue}
-          onChange={this._onTextEntryUpdated} onKeyDown={this._onKeyDown} />
-        { this._renderIncrementalSearchResults() }
-      </div>
-    );
-  }
+		return ( < div className = {
+				classList
+			} >
+			< input ref = "entry"
+			type = "text"
+			placeholder = {
+				this.props.placeholder
+			}
+			className = {
+				inputClassList
+			}
+			defaultValue = {
+				this.state.entryValue
+			}
+			onChange = {
+				this._onTextEntryUpdated
+			}
+			onKeyDown = {
+				this._onKeyDown
+			}
+			/> {
+				this._renderIncrementalSearchResults()
+			} < /div>
+		);
+	}
 });
 
 module.exports = Typeahead;
